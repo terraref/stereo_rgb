@@ -23,6 +23,7 @@ path = os.path.join(os.path.dirname(__file__), 'test_bin2tif_doc', test_id)
 dire = os.path.join(os.path.dirname(__file__), 'test_bin2tif_doc')
 pa_dire = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'bin2tiff')
 
+
 f = open(path + '_metadata.json', 'rb')
 raw_metadata = json.load(f)
 f.close()
