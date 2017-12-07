@@ -63,6 +63,7 @@ shutil.move(out_tmp_tiff, path + '_test_result.tif')
 
 def test_output_file():
     assert os.path.isfile(path + '_test_result.tif')
+    
 
 
 
