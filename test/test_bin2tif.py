@@ -3,8 +3,9 @@ import json
 import tempfile
 import shutil
 import sys
+import subprocess
 
-lib_path = os.path.abspath(os.path.join('..', '..'))
+lib_path = os.path.abspath(os.path.join('..'))
 sys.path.append(lib_path)
 
 from bin2tiff import bin_to_geotiff as bin2tiff
@@ -20,7 +21,7 @@ from terrautils.spatial import geojson_to_tuples
 test_id = 'aa2ffdb2-4b44-4828-ae3c-9be5698241ca'
 path = os.path.join(os.path.dirname(__file__), 'test_bin2tif_doc', test_id)
 dire = os.path.join(os.path.dirname(__file__), 'test_bin2tif_doc')
-
+pa_dire = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'bin2tiff')
 
 f = open(path + '_metadata.json', 'rb')
 raw_metadata = json.load(f)
@@ -52,7 +53,7 @@ left_gps_bounds = geojson_to_tuples(metadata['spatial_metadata']['left']['boundi
 out_tmp_tiff = os.path.join(tempfile.gettempdir(), test_id.encode('utf8'))
 left_image = bin2tiff.process_image(left_shape, img_left, None)
 
-f = open(dire + '/extractor_info.json', 'rb')
+f = open(pa_dire + '/extractor_info.json', 'rb')
 extractor_info = json.load(f)
 f.close()
 
@@ -65,7 +66,7 @@ def test_output_file():
     assert os.path.isfile(path + '_test_result.tif')
     
 
-
-
+if __name__ == '__main__':
+    subprocess.call(['python -m pytest test_bin2tif.py -p no:cacheprovider'], shell=True)
 
 
