@@ -7,7 +7,7 @@ import sys
 lib_path = os.path.abspath(os.path.join('..', '..'))
 sys.path.append(lib_path)
 
-from stereo_rgb import bin_to_geotiff as bin2tiff
+from bin2tiff import bin_to_geotiff as bin2tiff
 
 from terrautils.metadata import clean_metadata
 from terrautils.metadata import get_terraref_metadata
