@@ -8,7 +8,7 @@ import subprocess
 lib_path = os.path.abspath(os.path.join('..'))
 sys.path.append(lib_path)
 
-from bin2tiff import bin_to_geotiff as bin2tiff
+from stereo_rgb import bin_to_geotiff as bin2tiff
 
 from terrautils.metadata import clean_metadata
 from terrautils.metadata import get_terraref_metadata
@@ -54,11 +54,7 @@ left_gps_bounds = geojson_to_tuples(metadata['spatial_metadata']['left']['boundi
 out_tmp_tiff = os.path.join(tempfile.gettempdir(), test_id.encode('utf8'))
 left_image = bin2tiff.process_image(left_shape, img_left, None)
 
-f = open(pa_dire + '/extractor_info.json', 'rb')
-extractor_info = json.load(f)
-f.close()
-
-create_geotiff(left_image, left_gps_bounds, out_tmp_tiff, None, False, extractor_info, metadata)
+create_geotiff(left_image, left_gps_bounds, out_tmp_tiff, None, False, None, metadata)
 
 shutil.move(out_tmp_tiff, path + '_test_result.tif')
 
