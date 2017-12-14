@@ -1,13 +1,13 @@
 from setuptools import setup
 
-setup(name='bin2geotiff',
+setup(name='stereo_rgb',
       version='1.0.0',
-      packages=['bin2geotiff'],
+      packages=['stereo_rgb'],
       include_package_data=True,
       install_requires=[
           'utm', 
           'python-dateutil',
           'influxdb',
       ],
-      url='https://github.com/terraref/bin2geotiff',
+      url='https://github.com/terraref/stereo_rgb',
       )
