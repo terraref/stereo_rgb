@@ -9,6 +9,8 @@ import numpy as np
 from scipy.ndimage.filters import convolve
 from PIL import Image, ImageFilter
 
+import logging
+log = logging.getLogger(__name__)
 
 # bin2tif utilities
 def get_image_shape(metadata, side):
@@ -18,17 +20,21 @@ def get_image_shape(metadata, side):
         im_meta = metadata['sensor_variable_metadata']
         fmt = im_meta['image_format'][side]
         if fmt != 'BayerGR8':
-            print('Unknown image format: ' + fmt)
+            log.error('Unknown image format %s' % fmt)
+            raise RuntimeError('Unknown image format', fmt)
         width = im_meta['width_image_pixels'][side]
         height = im_meta['height_image_pixels'][side]
     except KeyError as err:
-        print('Metadata file missing key: ' + err.args[0])
+        log.error('Metadata file missing key: %s' % err.args[0])
+        raise
 
     try:
         width = int(width)
         height = int(height)
     except ValueError as err:
-        print('Corrupt image dimension, ' + err.args[0])
+        log.error('Corrupt image dimension in metadata file')
+        raise
+
     return (width, height)
 
 
@@ -43,7 +49,8 @@ def process_raw(shape, bin_file, out_file=None):
             Image.fromarray(im_color).save(out_file)
         return im_color
     except Exception as ex:
-        print('Error processing image "%s": %s' % (in_file, str(ex)))
+        log.error('Error processing image "%s": %s' % (in_file, str(ex)))
+        raise
 
 
 def demosaic(im):
