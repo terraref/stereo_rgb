@@ -14,6 +14,9 @@ from scipy.stats.stats import pearsonr
 import cv2
 from datetime import date
 
+import logging
+log = getLogger('stereo_match')
+
 
 def main():
     '''
