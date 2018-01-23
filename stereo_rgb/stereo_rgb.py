@@ -49,7 +49,8 @@ def process_raw(shape, bin_file, out_file=None):
             Image.fromarray(im_color).save(out_file)
         return im_color
     except Exception as ex:
-        log.error('Error processing image "%s": %s' % (in_file, str(ex)))
+        log.error('Error creating "%s" from "%s": %s' % \
+                  (out_file, bin_file, str(ex)))
         raise
 
 
