@@ -1,13 +1,12 @@
 import os
 import sys
 import json
+import csv
+import logging
 import pytest
 
-import logging
-logging.basicConfig(level=logging.INFO)
-
 #from terrautils.metadata import clean_metadata, get_terraref_metadata
-from stereo_rgb.stereo_rgb import get_image_shape, process_raw
+from stereo_rgb.stereo_rgb import *
 
 
 @pytest.fixture(scope='module')
@@ -49,13 +48,52 @@ def test_process_raw(binfile):
     assert im.shape[2] == 3   # r,g,b
 
 
-@pytest.mark.skip(reason='Not sure why this fails.')
 def test_process_raw_with_save(binfile, tmpdir):
     dims = get_image_shape(read_metadata(), 'left')
-    outfile = tmpdir.mkdir('save_test').join('output.jpeg') 
+    outfile = str(tmpdir.mkdir('save_test').join('output.jpeg'))
     im = process_raw(dims, binfile, outfile)
-    assert os.exists(outfile)
+    assert os.path.exists(outfile)
 
+
+def test_get_traits_table():
+    fields, traits = get_traits_table()
+    assert len(fields) == len(traits.keys())
+    for f in fields:
+        assert f in traits.keys()
+
+def test_generate_traits_list():
+    fields, traits = get_traits_table()
+    trait_list = generate_traits_list(traits)
+    assert len(fields) == len(trait_list)
+
+def test_generate_cc_csv(tmpdir):
+    """check the generation of the CSV file used update betydb
+
+    Method:
+      1) generate the traits table
+      2) update the 'species' field
+      3) write to CSV
+      4) read CSV with python csv module
+      5) assert species is set to test value
+    """
+
+    fname = str(tmpdir.mkdir('csv_test').join('out.csv'))
+
+    fields, traits = get_traits_table()
+    traits['species'] = 'test'
+    trait_list = generate_traits_list(traits)
+    retname = generate_cc_csv(fname, fields, trait_list)
+    assert fname == retname
+
+    # ensure the CSV is parsable the standard module
+    with open(retname) as f:
+        results = csv.reader(f)
+        headers = results.next()
+        values = results.next()
+            
+    idx = headers.index('species')
+    assert idx != -1
+    assert values[idx] == 'test'
 
 def test_calculate_canopycover():
     pass
