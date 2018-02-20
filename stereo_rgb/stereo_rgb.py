@@ -4,13 +4,13 @@
 
 __author__ = "Joshua Little, Zongyang Li"
 
-
+import logging
 import numpy as np
 from scipy.ndimage.filters import convolve
 from PIL import Image, ImageFilter
 
-import logging
 log = logging.getLogger(__name__)
+
 
 # bin2tif utilities
 def get_image_shape(metadata, side):
@@ -38,7 +38,7 @@ def get_image_shape(metadata, side):
         width = im_meta['width_image_pixels'][side]
         height = im_meta['height_image_pixels'][side]
     except KeyError as err:
-        log.error('Metadata file missing key: %s' % err.args[0])
+        log.error('Metadata file missing key: %s (has it been cleaned using terrautils.metadata.clean_metadata()?)' % err.args[0])
         raise
 
     try:
@@ -49,7 +49,6 @@ def get_image_shape(metadata, side):
         raise
 
     return (width, height)
-
 
 def process_raw(shape, bin_file, out_file=None):
     """Read image file into array, demosaic, rotate into output image.
@@ -79,7 +78,6 @@ def process_raw(shape, bin_file, out_file=None):
         raise
 
     return im_color
-
 
 def demosaic(im):
     """Demosaic the BayerGR8 image.
@@ -118,89 +116,6 @@ def demosaic(im):
 
 
 # canopycover utilities
-
-# TODO if the order of the fields is important use an ordered dict
-def get_traits_table():
-    """Return trait dictionary and field array.
-
-    Returns:
-      (tuple): tuple with field tuple and traits dictionary
-    """
-
-    # Compiled traits table
-    fields = ('local_datetime', 'canopy_cover', 'access_level', 'species',
-              'site', 'citation_author', 'citation_year', 'citation_title',
-              'method')
-    traits = {'local_datetime': '',
-              'canopy_cover': [],
-              'access_level': '2',
-              'species': 'Sorghum bicolor',
-              'site': [],
-              'citation_author': '"Zongyang, Li"',
-              'citation_year': '2016',
-              'citation_title': 'Maricopa Field Station Data and Metadata',
-              'method': 'Canopy Cover Estimation from RGB images'}
-
-    return (fields, traits)
-
-
-# TODO use ordereddict
-def generate_traits_list(traits):
-    """Return trait data as a list in known order.
-
-    Arguments:
-      traits (dict): trait data with well known fields
-
-    Returns:
-      (list): 
-    """
-
-    trait_list = [traits['local_datetime'],
-                  traits['canopy_cover'],
-                  traits['access_level'],
-                  traits['species'],
-                  traits['site'],
-                  traits['citation_author'],
-                  traits['citation_year'],
-                  traits['citation_title'],
-                  traits['method']
-                  ]
-
-    return trait_list
-
-
-def generate_cc_csv(fname, fields, traits):
-    """Generate CSV called fname with fields and trait_list.
-
-    Arguments:
-      fname (string): filepath where CSV will be written
-      fields (list): column labels
-      traits (list): column values
-
-    Throws:
-      IOError: unable to write CSV file (file permissions?)
-      RuntimeError: fields and traits list are not the same length
-
-    Returns:
-      (string): the path to the CSV (same as input parameter)
-    """ 
-
-    if len(fields) != len(traits):
-        log.debug('fields = %s, traits = %s', fields, traits)
-        raise RuntimeError('fields and traits lists are not same length')
-
-    try:
-        csv = open(fname, 'w')
-        csv.write(','.join(map(str, fields)) + '\n')
-        csv.write(','.join(map(str, traits)) + '\n')
-        csv.close()
-    except IOError as ex:
-        log.error('unable to write CSV file: {}'.format(fname))
-        raise
-
-    return fname
-
-
 def calculate_canopycover(pxarray):
     """Return greenness percentage of given numpy array of pixels.
 
