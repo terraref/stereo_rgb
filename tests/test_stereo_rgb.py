@@ -1,11 +1,8 @@
 import os
-import sys
 import json
-import csv
-import logging
 import pytest
+import subprocess
 
-#from terrautils.metadata import clean_metadata, get_terraref_metadata
 from stereo_rgb.stereo_rgb import *
 
 
@@ -55,45 +52,9 @@ def test_process_raw_with_save(binfile, tmpdir):
     assert os.path.exists(outfile)
 
 
-def test_get_traits_table():
-    fields, traits = get_traits_table()
-    assert len(fields) == len(traits.keys())
-    for f in fields:
-        assert f in traits.keys()
-
-def test_generate_traits_list():
-    fields, traits = get_traits_table()
-    trait_list = generate_traits_list(traits)
-    assert len(fields) == len(trait_list)
-
-def test_generate_cc_csv(tmpdir):
-    """check the generation of the CSV file used update betydb
-
-    Method:
-      1) generate the traits table
-      2) update the 'species' field
-      3) write to CSV
-      4) read CSV with python csv module
-      5) assert species is set to test value
-    """
-
-    fname = str(tmpdir.mkdir('csv_test').join('out.csv'))
-
-    fields, traits = get_traits_table()
-    traits['species'] = 'test'
-    trait_list = generate_traits_list(traits)
-    retname = generate_cc_csv(fname, fields, trait_list)
-    assert fname == retname
-
-    # ensure the CSV is parsable the standard module
-    with open(retname) as f:
-        results = csv.reader(f)
-        headers = results.next()
-        values = results.next()
-            
-    idx = headers.index('species')
-    assert idx != -1
-    assert values[idx] == 'test'
 
 def test_calculate_canopycover():
     pass
+
+if __name__ == '__main__':
+    subprocess.call(['python -m pytest test_stereo_rgb.py -p no:cacheprovider'], shell=True)
