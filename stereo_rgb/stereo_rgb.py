@@ -50,6 +50,7 @@ def get_image_shape(metadata, side):
 
     return (width, height)
 
+
 def process_raw(shape, bin_file, out_file=None):
     """Read image file into array, demosaic, rotate into output image.
 
@@ -78,6 +79,7 @@ def process_raw(shape, bin_file, out_file=None):
         raise
 
     return im_color
+
 
 def demosaic(im):
     """Demosaic the BayerGR8 image.
@@ -141,6 +143,8 @@ def calculate_canopycover(pxarray):
 
     c = np.count_nonzero(sub_mask)
     ratio = c/float(b.size)
+    # Scale ratio from 0-1 to 0-100
+    ratio *= 100.0
 
     return ratio
 

@@ -14,8 +14,6 @@ def read_metadata():
     return metadata
 
 
-# TODO dumb pointer to a static data file but could get file from 
-# alternate source
 @pytest.fixture(scope='module')
 def binfile():
     return os.path.join(os.path.dirname(__file__), 'data/binfile.bin')
@@ -25,6 +23,8 @@ def binfile():
     (read_metadata(), 'left'),
     (read_metadata(), 'right'),
 ])
+
+
 def test_get_image_shape(metadata, side):
     dims = get_image_shape(metadata, side)
     assert len(dims) == 2
@@ -52,9 +52,12 @@ def test_process_raw_with_save(binfile, tmpdir):
     assert os.path.exists(outfile)
 
 
+def test_calculate_canopycover(binfile):
+    dims = get_image_shape(read_metadata(), 'left')
+    im = process_raw(dims, binfile)
+    cc = calculate_canopycover(im)
+    assert cc == 85.33740515128663
 
-def test_calculate_canopycover():
-    pass
 
 if __name__ == '__main__':
     subprocess.call(['python -m pytest test_stereo_rgb.py -p no:cacheprovider'], shell=True)
