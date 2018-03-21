@@ -3,7 +3,7 @@ import json
 import pytest
 import subprocess
 
-from stereo_rgb.stereo_rgb import *
+from terraref.stereo_rgb import *
 
 
 @pytest.fixture(scope='module')
