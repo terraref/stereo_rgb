@@ -1,1 +1,1 @@
-include tests/data/*
+include README.rst tests/data/*
