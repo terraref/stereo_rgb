@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 def description():
-      with open('readme.rst') as f:
+      with open('README.rst') as f:
             return f.read()
 
 setup(name='terraref-stereo_rgb',
