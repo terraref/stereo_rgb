@@ -5,9 +5,11 @@ def description():
             return f.read()
 
 setup(name='terraref-stereo_rgb',
-      version='1.0.4',
+      version='1.0.6',
       description='TERRA-REF stereo RGB camera science package',
       long_description=description(),
+      keywords=['field crop', 'phenomics', 'computer vision', 'remote sensing'],
+      classifiers=['Topic :: Scientific/Engineering :: GIS'],
       packages=find_packages(),
       namespace_packages=['terraref'],
       include_package_data=True,
