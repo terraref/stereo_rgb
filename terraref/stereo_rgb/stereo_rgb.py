@@ -9,6 +9,9 @@ import numpy as np
 from scipy.ndimage.filters import convolve
 from PIL import Image, ImageFilter
 
+from terrautils.formats import create_geotiff
+
+
 log = logging.getLogger(__name__)
 
 
@@ -115,6 +118,19 @@ def demosaic(im):
     im_color[:, :, 2] = convolve(B, fRB)
 
     return im_color
+
+
+def bin2tif(inbin, outtif, shape, bounds, metadata):
+    """
+    :param inbin: a left or right stereoRGB bin file
+    :param outtif: output GeoTIFF file
+    :param shape: (width, height) of image in pixels derived from sensor_variable_metadata
+    :param bounds: bounding box of image derived from spatial_metadata bounding_box
+    :param metadata: any metadata to embed inside created geotiff
+    """
+
+    img = process_raw(shape, inbin, None)
+    create_geotiff(img, bounds, outtif, None, False, extra_metadata=metadata)
 
 
 # canopycover utilities
