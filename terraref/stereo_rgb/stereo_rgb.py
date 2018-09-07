@@ -9,7 +9,7 @@ import numpy as np
 from scipy.ndimage.filters import convolve
 from PIL import Image, ImageFilter
 
-from terraref.terrautils.formats import create_geotiff
+from terrautils.formats import create_geotiff
 
 
 log = logging.getLogger(__name__)
