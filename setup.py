@@ -5,7 +5,7 @@ def description():
             return f.read()
 
 setup(name='terraref-stereo_rgb',
-      version='1.0.8',
+      version='1.0.9',
       description='TERRA-REF stereo RGB camera science package',
       long_description=description(),
       keywords=['field crop', 'phenomics', 'computer vision', 'remote sensing'],
